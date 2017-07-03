@@ -1,23 +1,13 @@
-'use strict';
+var gulp = require('gulp')
+var webpack = require('webpack')
+var webpackStream = require('webpack-stream')
 
-var gulp = require("gulp"),
-	gutil = require("gulp-util"),
-	Config = require("./build/conf"),
-	webpack = require('webpack'),
-	webpackStream = require('webpack-stream');
+var config = require('./webpack.config.js')
 
-// Defaults to development enviroment
-process.env.NODE_ENV = 'development';
-// Allow pass the --production flag
-if ( gutil.env.production ) {
-	process.env.NODE_ENV = 'production';
-}
+gulp.task('default', () => {
+  return gulp.src('src/js/app.js')
+    .pipe(webpackStream(config, webpack))
+    .pipe(gulp.dest('dist/js'))
+})
 
-// Get configuration files for enviroment
-var env = new Config();
 
-gulp.task('default', function(e) {
-	return gulp.src('app.js')
-		.pipe( webpackStream(env, webpack) )
-		.pipe( gulp.dest('dist/js/') );
-});
